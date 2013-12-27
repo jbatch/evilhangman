@@ -44,6 +44,7 @@ public class Game
 			if(loadWords(wordLength))
 			{
 				System.out.println("There are " + wordList.size() + " words");
+				validLength = true;
 				startGuessing();
 			}
 			else
