@@ -17,7 +17,7 @@ public class Game
 		builtWord = "";
 		wordList = new ArrayList<String>();
 		remainingLetters = new ArrayList<Character>();
-		for(int i = 'a';i <= 'z';i++)
+		for(int i = 'A';i <= 'Z';i++)
 			remainingLetters.add(Character.toChars(i)[0]); //List of letters not yet guessed
 
 		usedLetters = new ArrayList<Character>(); //Initially an empty arrayList
@@ -36,28 +36,26 @@ public class Game
 			try
 			{
 				wordLength = ConsoleIO.readInt();
-				if(wordLength >=2 && wordLength <= 10)
-					validLength = true;
 			}
 			catch(Exception e){System.out.println(e.getMessage());}
-		}
-		
-		builtWord = fillString('-', wordLength);
 
-		if(loadWords(wordLength))
-		{
-			System.out.println("There are " + wordList.size() + " words");
-			startGuessing();
-		}
-		else
-		{
-			System.out.println("An error occured while loading the word list");
+			builtWord = fillString('-', wordLength);
+
+			if(loadWords(wordLength))
+			{
+				System.out.println("There are " + wordList.size() + " words");
+				startGuessing();
+			}
+			else
+			{
+				System.out.println("Invalid word length");
+			}
 		}
 	}
 	
 	private boolean loadWords(int wordLength)
 	{
-		boolean ret = true;
+		boolean ret = false;
 		String word;
 		
 		try
@@ -69,6 +67,7 @@ public class Game
 				if(word.length() == wordLength)
 				{
 					wordList.add(word);
+					ret = true;
 				}
 			}
 			br.close();
@@ -77,7 +76,6 @@ public class Game
 		catch(Exception e)
 		{
 			System.out.println(e.getMessage());
-			ret = false;
 		}
 		
 		return ret;
@@ -89,22 +87,24 @@ public class Game
 		char c = ' ';
 
 		ArrayList<String>[] newList = (ArrayList<String>[])new ArrayList[wordList.get(0).length() + 1];
-		for(int i=0;i<wordList.get(0).length() + 1;i++)
+		for(int i=0;i<wordList.get(0).length() + 1;i++) //Initialise each wordlist in the array
 			newList[i] = new ArrayList<String>();
 		
 		
 		while(guessesLeft > 0 && lettersGuessed < wordList.get(0).length())
 		{
 			printGameStatus(guessesLeft);
-			System.out.print("Guess a letter: ");
+			System.out.print("\n\nGuess a letter: ");
 			try
 			{
 				c = ConsoleIO.readLine().charAt(0);
+				c = Character.toUpperCase(c);
 			}
 			catch(Exception e){System.out.println(e.getMessage());}
 			
 			for(String s: wordList)
 			{
+				s = s.toUpperCase();
 				if(!s.contains(c + ""))
 					newList[wordList.get(0).length()].add(s);
 				else if(s.indexOf(c) != s.lastIndexOf(c))
@@ -173,5 +173,6 @@ public class Game
 			sb.append(c);
 		return sb.toString();
 	}
+	
 	
 }
