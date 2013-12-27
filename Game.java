@@ -6,6 +6,7 @@ import java.io.FileReader;
 public class Game
 {
 	Scanner in;
+	
 	ArrayList<String> wordList;
 	ArrayList<Character> remainingLetters, usedLetters;
 	String builtWord;
@@ -18,12 +19,7 @@ public class Game
 		remainingLetters = new ArrayList<Character>();
 		for(int i = 'a';i <= 'z';i++)
 			remainingLetters.add(Character.toChars(i)[0]);
-			
-		/*for(Character c: remainingLetters)
-			System.out.print(c.toString() + " ");*/
-		//System.out.println(arrayListToString(remainingLetters));
-			
-		
+
 		usedLetters = new ArrayList<Character>();
 
 		in = new Scanner(System.in);
@@ -32,10 +28,19 @@ public class Game
 	
 	private void startGame()
 	{
-		int wordLength;
-
-		System.out.println("Word length: ");
-		wordLength = in.nextInt();
+		int wordLength = 0;
+		boolean validLength = false;
+		while(!validLength)
+		{
+			System.out.println("Enter Word length: ");
+			try
+			{
+				wordLength = ConsoleIO.readInt();
+				if(wordLength >=2 && wordLength <= 10)
+					validLength = true;
+			}
+			catch(Exception e){System.out.println(e.getMessage());}
+		}
 
 		if(loadWords(wordLength))
 		{
@@ -79,7 +84,7 @@ public class Game
 	private void startGuessing()
 	{
 		int guessesLeft = 10, lettersGuessed = 0;
-		char c;
+		char c = ' ';
 
 		ArrayList<String>[] newList = (ArrayList<String>[])new ArrayList[wordList.get(0).length() + 1];
 		for(int i=0;i<wordList.get(0).length() + 1;i++)
@@ -90,7 +95,12 @@ public class Game
 		{
 			printGameStatus(guessesLeft);
 			System.out.println("Guess a letter: ");
-			c = in.next(".").charAt(0);
+			try
+			{
+				c = ConsoleIO.readChar();
+			}
+			catch(Exception e){System.out.println(e.getMessage());}
+			
 			for(String s: wordList)
 			{
 				if(!s.contains(c + ""))
