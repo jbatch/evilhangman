@@ -15,7 +15,7 @@ public class ConsoleIO
 	
 	public static String readLine() throws Exception
 	{
-		String s = " ";
+		String s = "";
 		char c = ' ';
 		do
 		{

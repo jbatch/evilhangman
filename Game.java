@@ -14,13 +14,13 @@ public class Game
 	public Game()
 	{
 		System.out.println("Welcome to Hangman");
-		builtWord = new String("-----");
+		builtWord = "";
 		wordList = new ArrayList<String>();
 		remainingLetters = new ArrayList<Character>();
 		for(int i = 'a';i <= 'z';i++)
-			remainingLetters.add(Character.toChars(i)[0]);
+			remainingLetters.add(Character.toChars(i)[0]); //List of letters not yet guessed
 
-		usedLetters = new ArrayList<Character>();
+		usedLetters = new ArrayList<Character>(); //Initially an empty arrayList
 
 		in = new Scanner(System.in);
 		startGame();
@@ -41,6 +41,8 @@ public class Game
 			}
 			catch(Exception e){System.out.println(e.getMessage());}
 		}
+		
+		builtWord = fillString('-', wordLength);
 
 		if(loadWords(wordLength))
 		{
@@ -94,10 +96,10 @@ public class Game
 		while(guessesLeft > 0 && lettersGuessed < wordList.get(0).length())
 		{
 			printGameStatus(guessesLeft);
-			System.out.println("Guess a letter: ");
+			System.out.print("Guess a letter: ");
 			try
 			{
-				c = ConsoleIO.readChar();
+				c = ConsoleIO.readLine().charAt(0);
 			}
 			catch(Exception e){System.out.println(e.getMessage());}
 			
@@ -119,8 +121,6 @@ public class Game
 				}
 			}
 			
-			/*for(int i=0;i<newList.length;i++)
-				System.out.println("List Size: " + newList[i].size());*/
 			int maxSize = 0, maxIdx = -1;
 			for(int i=0;i<newList.length;i++)
 			{
@@ -136,8 +136,6 @@ public class Game
 			for(int i=0;i<newList.length;i++)
 				newList[i].clear();
 			
-			//for(String s: wordList)
-				//System.out.println(s);
 			guessesLeft--;
 			remainingLetters.remove(Character.valueOf(c));
 			usedLetters.add(Character.toChars(c)[0]);
@@ -166,6 +164,14 @@ public class Game
 	private void printGameStatus(int gr)
 	{
 		System.out.println("Guesses Remaining: " + gr + "\nLetters Remaining:\n" + arrayListToString(remainingLetters) + "\nLetters Used:\n" + arrayListToString(usedLetters) +"\nWord:" + builtWord);
+	}
+	
+	public String fillString(char c, int count)
+	{
+		StringBuilder sb = new StringBuilder(count);
+		for(int i=0;i<count;i++)
+			sb.append(c);
+		return sb.toString();
 	}
 	
 }
