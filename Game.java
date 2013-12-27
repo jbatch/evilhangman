@@ -9,7 +9,7 @@ public class Game
 	
 	ArrayList<String> wordList;
 	ArrayList<Character> remainingLetters, usedLetters;
-	String builtWord;
+	String builtWord, pattern;
 		
 	public Game()
 	{
@@ -40,10 +40,10 @@ public class Game
 			catch(Exception e){System.out.println(e.getMessage());}
 
 			builtWord = fillString('-', wordLength);
+			pattern = fillString('.', wordLength);
 
 			if(loadWords(wordLength))
 			{
-				System.out.println("There are " + wordList.size() + " words");
 				validLength = true;
 				startGuessing();
 			}
@@ -62,10 +62,9 @@ public class Game
 		try
 		{
 			BufferedReader br = new BufferedReader(new FileReader("wordlist.txt"));
-			System.out.println("File Loaded");
 			while((word=br.readLine()) != null)
 			{
-				if(word.length() == wordLength)
+				if(word.matches(pattern))
 				{
 					wordList.add(word);
 					ret = true;
@@ -86,13 +85,11 @@ public class Game
 	{
 		int guessesLeft = 10, lettersGuessed = 0;
 		char c = ' ';
-
-		ArrayList<String>[] newList = (ArrayList<String>[])new ArrayList[wordList.get(0).length() + 1];
-		for(int i=0;i<wordList.get(0).length() + 1;i++) //Initialise each wordlist in the array
-			newList[i] = new ArrayList<String>();
+		boolean matchedFamily = false;
 		
-		
-		while(guessesLeft > 0 && lettersGuessed < wordList.get(0).length())
+		ArrayList<WordFamily> familyList = new ArrayList<WordFamily>();
+	
+		while(guessesLeft > 0 && pattern.contains("."))
 		{
 			printGameStatus(guessesLeft);
 			System.out.print("\n\nGuess a letter: ");
@@ -105,53 +102,79 @@ public class Game
 			
 			for(String s: wordList)
 			{
+				matchedFamily = false;
 				s = s.toUpperCase();
-				if(!s.contains(c + ""))
-					newList[wordList.get(0).length()].add(s);
-				else if(s.indexOf(c) != s.lastIndexOf(c))
+
+				String sPattern = buildWordPattern(s,c, pattern);
+				WordFamily thisFamily = new WordFamily(sPattern);
+	
+				for(WordFamily wf: familyList)
 				{
-				 //Letter appears twice so ignore this word
-				}
-				else
-				{
-					for(int i = 0; i < wordList.get(0).length(); i++)
+					if(s.matches(wf.getPattern()))
 					{
-						if(s.charAt(i) == c)
-							newList[i].add(s);
+						wf.add(s);
+						matchedFamily = true;
 					}
+				}			
+				if(!matchedFamily)
+				{
+					thisFamily.add(s);
+					familyList.add(thisFamily);
+				}
+			}
+
+			WordFamily biggestFamily = new WordFamily();
+			for(WordFamily wf:familyList)
+			{
+				if(wf.size()>biggestFamily.size())
+				{
+					biggestFamily = wf;
 				}
 			}
 			
-			int maxSize = 0, maxIdx = -1;
-			for(int i=0;i<newList.length;i++)
-			{
-				if(newList[i].size()>maxSize)
-				{
-					maxSize = newList[i].size();
-					maxIdx = i;
-				}
-			}
 			
 			wordList.clear();
-			wordList.addAll(newList[maxIdx]);
-			for(int i=0;i<newList.length;i++)
-				newList[i].clear();
+			wordList.addAll(biggestFamily);
 			
-			guessesLeft--;
+			for(WordFamily wf:familyList)
+				wf.clear();
+			familyList.clear();
+					
 			remainingLetters.remove(Character.valueOf(c));
 			usedLetters.add(Character.toChars(c)[0]);
-			if(maxIdx != wordList.get(0).length())
+			
+			if(biggestFamily.getPattern().replace("[^"+ c +"]", ".").contains(c + ""))
 			{
 				lettersGuessed++;
-				int j = wordList.get(0).indexOf(c);
-				builtWord = builtWord.substring(0,j) + c + builtWord.substring(j + 1);
+				pattern = biggestFamily.getPattern().replace("[^"+ c +"]", ".");
+				builtWord = pattern.replace('.','-');			
 			}
+			else
+				guessesLeft--;
 		}
 		if(lettersGuessed < wordList.get(0).length()) //PlayerLost
 		{
 			int r = (int)(Math.random() * ((wordList.size() - 1) + 1));
 			System.out.println("You lost!\nThe word was: " + wordList.get(r));
 		}
+		else
+			System.out.println("You win");
+	}
+	
+	private String buildWordPattern(String s, char c, String patternSoFar)
+	{
+		int i = 0;
+		char[] returnCharArray = patternSoFar.toCharArray();
+		for(char ch:s.toCharArray())
+		{
+			if(ch == c)
+				returnCharArray[i] = c;
+			else if (ch != c && patternSoFar.charAt(i) == '.')
+				returnCharArray[i] = '^';
+			i++;
+		}
+		
+		return String.valueOf(returnCharArray).replace("^", "[^" + c + "]");
 	}
 	
 	private String arrayListToString(ArrayList<Character> list)
@@ -164,7 +187,14 @@ public class Game
 	
 	private void printGameStatus(int gr)
 	{
-		System.out.println("Guesses Remaining: " + gr + "\nLetters Remaining:\n" + arrayListToString(remainingLetters) + "\nLetters Used:\n" + arrayListToString(usedLetters) +"\nWord:" + builtWord);
+		System.out.println("Possible Words: " + wordList.size() + "\nGuesses Remaining: " + gr + "\nLetters Remaining:\n" + arrayListToString(remainingLetters) + "\nLetters Used:\n" + arrayListToString(usedLetters) +"\nWord:" + builtWord);
+		//printWordList(wordList);
+	}
+	
+	private void printWordList(ArrayList<String> wl)
+	{
+		for(String s:wl)
+			System.out.println(s);
 	}
 	
 	public String fillString(char c, int count)
