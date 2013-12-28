@@ -2,18 +2,18 @@ import java.io.*;
 
 public class ConsoleIO
 {
-	public static char readChar() throws Exception
+	public static char readChar() throws IOException
 	{
 		char c = ' ';
 		try
 		{
 			c = (char)System.in.read();
 		}
-		catch(Exception e){throw new Exception(e);}
+		catch(IOException e){throw new IOException(e);}
 		return c;
 	}
 	
-	public static String readLine() throws Exception
+	public static String readLine() throws IOException
 	{
 		String s = "";
 		char c = ' ';
@@ -27,13 +27,13 @@ public class ConsoleIO
 					s += c;
 				}
 			}
-			catch(Exception e){throw new Exception(e);}
+			catch(IOException e){throw new IOException(e);}
 		}
 		while(c != '\n');
 		return s;
 	}
 	
-	public static void clearLine() throws Exception
+	public static void clearLine() throws IOException
 	{
 		char c = ' ';
 		do
@@ -42,12 +42,12 @@ public class ConsoleIO
 			{
 				c = readChar();
 			}
-			catch(Exception e){throw new Exception(e);}			
+			catch(IOException e){throw new IOException(e);}			
 		}
 		while(c != '\n');
 	}
 	
-	public static double readDouble() throws Exception
+	public static double readDouble() throws IOException
 	{
 		InputStreamReader isr = new InputStreamReader(System.in);
 		StreamTokenizer st = new StreamTokenizer(isr);
@@ -65,15 +65,15 @@ public class ConsoleIO
 				}
 				else
 				{
-					throw new Exception("Non numeric value entered");
+					throw new IllegalArgumentException("Non numeric value entered");
 				}
 			}
-			catch(Exception e){throw new Exception(e);}
+			catch(IOException e){throw new IOException(e);}
 		}
 		return d;
 	}
 	
-	public static int readInt() throws Exception
+	public static int readInt() throws IOException
    {
 		InputStreamReader isr = new InputStreamReader(System.in);
 		StreamTokenizer  st = new StreamTokenizer(isr);
@@ -93,10 +93,10 @@ public class ConsoleIO
 				}
 				else
 				{
-					throw new Exception("Non integer entered");
+					throw new IOException("Non integer entered");
 				}
 			}
-			catch(Exception e){throw new Exception(e);}
+			catch(IOException e){throw new IOException(e);}
 	   }
 
 		return i;
