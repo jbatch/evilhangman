@@ -1,9 +1,8 @@
-import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
+//Stuff for GUI
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
@@ -13,22 +12,19 @@ public class Game implements ActionListener
 {
 	HangmanGui hGui;
 	ArrayList<String> wordList;
-	ArrayList<Character> remainingLetters, usedLetters;
 	Letter[] remainingLettersArray, usedLettersArray;
 	String builtWord, pattern;
-	int guessesLeft, lettersGuessed;
+	int guessesLeft;
 	JLabel builtWordLabel, gameStatusLabel;
 	boolean gameOver;
 		
 	public Game()
 	{
 		guessesLeft = 10;
-		lettersGuessed = 0;
 		gameOver = false;
 		hGui = new HangmanGui();	
 		builtWord = "";
 		wordList = new ArrayList<String>();
-		remainingLetters = new ArrayList<Character>();
 		
 		remainingLettersArray = hGui.getRemainingLetters();
 		usedLettersArray = hGui.getUsedLetters();
@@ -38,14 +34,7 @@ public class Game implements ActionListener
 		{
 			remainingLettersArray[i].addActionListener(this);
 		}
-		
-		for(int i = 'A';i <= 'Z';i++)
-		{
-			remainingLetters.add(Character.toChars(i)[0]); //List of letters not yet guessed
-		}
-
-		usedLetters = new ArrayList<Character>(); //Initially an empty arrayList
-
+		gameStatusLabel.setText("Guesses left: " + guessesLeft);
 		startGame();
 	}
 	
@@ -127,13 +116,7 @@ public class Game implements ActionListener
 		}
 		return s;
 	}
-	
-	private void printGameStatus(int gr)
-	{
-		System.out.println("Possible Words: " + wordList.size() + "\nGuesses Remaining: " + gr + "\nLetters Remaining:\n" + arrayListToString(remainingLetters) + "\nLetters Used:\n" + arrayListToString(usedLetters) +"\nWord:" + builtWord);
-		//printWordList(wordList);
-	}
-	
+
 	private void printWordList(ArrayList<String> wl)
 	{
 		for(String s:wl)
@@ -186,72 +169,62 @@ public class Game implements ActionListener
 		{
 			ArrayList<WordFamily> familyList = new ArrayList<WordFamily>();
 			boolean matchedFamily = false;
-	
-			if(charExistsInArrayList(c,remainingLetters))
+
+			for(String s: wordList)
 			{
-				for(String s: wordList)
+				matchedFamily = false;
+				s = s.toUpperCase();
+
+				String sPattern = buildWordPattern(s,c, pattern);
+				WordFamily thisFamily = new WordFamily(sPattern);
+
+				for(WordFamily wf: familyList)
 				{
-					matchedFamily = false;
-					s = s.toUpperCase();
-
-					String sPattern = buildWordPattern(s,c, pattern);
-					WordFamily thisFamily = new WordFamily(sPattern);
-
-					for(WordFamily wf: familyList)
+					if(s.matches(wf.getPattern()))
 					{
-						if(s.matches(wf.getPattern()))
-						{
-							wf.add(s);
-							matchedFamily = true;
-						}
-					}			
-					if(!matchedFamily)
-					{
-						thisFamily.add(s);
-						familyList.add(thisFamily);
+						wf.add(s);
+						matchedFamily = true;
 					}
+				}			
+				if(!matchedFamily)
+				{
+					thisFamily.add(s);
+					familyList.add(thisFamily);
 				}
+			}
 
-				WordFamily biggestFamily = new WordFamily();
-				for(WordFamily wf:familyList)
+			WordFamily biggestFamily = new WordFamily();
+			for(WordFamily wf:familyList)
+			{
+				if(wf.size()>biggestFamily.size())
 				{
-					if(wf.size()>biggestFamily.size())
-					{
-						biggestFamily = wf;
-					}
+					biggestFamily = wf;
 				}
-		
-				wordList.clear();
-				wordList.addAll(biggestFamily);
-		
-				for(WordFamily wf:familyList)
-				{
-					wf.clear();
-				}
-				familyList.clear();
-				
-				//remainingLetters.remove(Character.valueOf(c));
-				//usedLetters.add(Character.toChars(c)[0]);
-		
-				if(biggestFamily.getPattern().replace("[^"+ c +"]", ".").contains(c + ""))
-				{
-					lettersGuessed++;
-					pattern = biggestFamily.getPattern().replace("[^"+ c +"]", ".");
-					builtWord = pattern.replace('.','-');	
-					builtWordLabel.setText(builtWord);		
-				}
-				else
-				{
-					guessesLeft--;
-				}
+			}
+	
+			wordList.clear();
+			wordList.addAll(biggestFamily);
+	
+			for(WordFamily wf:familyList)
+			{
+				wf.clear();
+			}
+			familyList.clear();
+	
+			if(biggestFamily.getPattern().replace("[^"+ c +"]", ".").contains(c + ""))
+			{
+				pattern = biggestFamily.getPattern().replace("[^"+ c +"]", ".");
+				builtWord = pattern.replace('.','-');	
+				builtWordLabel.setText(builtWord);		
 			}
 			else
 			{
-				System.out.println("That is not a remaining letter"); //change later
+				guessesLeft--;
 			}
-		
+
 			System.out.println("Guesses left: " + guessesLeft);
-		
+			gameStatusLabel.setText("Guesses left: " + guessesLeft);
+			
 			if(guessesLeft == 0 && builtWord.contains("-")) //PlayerLost
 			{
 				int r = (int)(Math.random() * ((wordList.size() - 1) + 1));

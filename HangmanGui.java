@@ -18,6 +18,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.JButton;
 
+import javax.swing.Box;
+
 
 
 
@@ -44,14 +46,13 @@ public class HangmanGui extends JFrame// implements ActionListener
 		remPanel = new JPanel();	
 		usedPanel = new JPanel();
 		hangmanArea.setBackground(Color.black);
-		builtWordArea.setBackground(Color.red);
+		//builtWordArea.setBackground(Color.red);
 		
 		remLettersArea.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		remainingLetters = new Letter[26];
 		for(int i = 0;i<26;i++)
 		{
 			remainingLetters[i] = new Letter("" + (char)('A' + i));
-			//remainingLetters[i].addActionListener(this);
 			remLettersArea.add(remainingLetters[i]);
 		}
 		remLettersArea.setPreferredSize(new Dimension(gameWidth, remainingLetters[0].getHeight()));
@@ -65,10 +66,18 @@ public class HangmanGui extends JFrame// implements ActionListener
 			usedLettersArea.add(usedLetters[i]);
 		}
 		
+		
+		
+		builtWordArea.setLayout(new BoxLayout(builtWordArea, BoxLayout.Y_AXIS));
 		builtWord = new JLabel("-----");
-		gameStatusLabel = new JLabel("ttt");
+		builtWord.setAlignmentX(Component.CENTER_ALIGNMENT);
+		gameStatusLabel = new JLabel("");
+		gameStatusLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		builtWordArea.add(Box.createVerticalGlue());
 		builtWordArea.add(builtWord);
+		builtWordArea.add(Box.createRigidArea(new Dimension(0,40)));
 		builtWordArea.add(gameStatusLabel);
+		builtWordArea.add(Box.createVerticalGlue());
 		
 		lettersRemainingLabel = new JLabel("Letters Remaining:");
 		remPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -76,6 +85,7 @@ public class HangmanGui extends JFrame// implements ActionListener
 		remPanel.setMaximumSize(new Dimension(gameWidth, lettersRemainingLabel.getHeight()));
 		
 		lettersUsedLabel = new JLabel("Letters Used:");
+		usedPanel.setBackground(Color.yellow);
 		usedPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		usedPanel.add(lettersUsedLabel);
 		usedPanel.setMaximumSize(new Dimension(gameWidth, lettersUsedLabel.getHeight()));
@@ -121,18 +131,6 @@ public class HangmanGui extends JFrame// implements ActionListener
 		setJMenuBar(menubar);
      
 	}
-	
-	/*public void actionPerformed(ActionEvent e) 
-	{          
-		((JButton)(e.getSource())).setVisible(false);
-		for(int i=0;i<26;i++)
-		{
-			if(usedLetters[i].getText().equals(((JButton)(e.getSource())).getText()))
-			{
-				usedLetters[i].setVisible(true);
-			}
-		}
-	}*/
 	
 	public Letter[] getRemainingLetters()
 	{
