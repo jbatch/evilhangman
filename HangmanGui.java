@@ -30,12 +30,30 @@ public class HangmanGui extends JFrame// implements ActionListener
 	private JPanel remLettersArea, usedLettersArea, bottomPanel, remPanel, usedPanel;
 	private Letter[] remainingLetters, usedLetters;
 	private JLabel builtWord, lettersRemainingLabel, lettersUsedLabel, gameStatusLabel;
+	private JMenuItem newGame;
 
 
 	public HangmanGui()
 	{
 		int gameHeight = 500, gameWidth = 750;
-	
+		
+		JMenuBar menubar = new JMenuBar();
+		JMenu file = new JMenu("File");
+		newGame = new JMenuItem("New Game");
+		JMenuItem exitGame = new JMenuItem("Exit");
+		
+		exitGame.addActionListener(new ActionListener()
+		{
+            public void actionPerformed(ActionEvent event)
+            {
+            	System.exit(0);           	
+            }
+      });
+		
+		file.add(newGame);
+		file.add(exitGame);
+		menubar.add(file);
+		setJMenuBar(menubar);
 	
 		gamePanel = new JPanel();
 		hangmanArea = new JPanel();
@@ -65,6 +83,7 @@ public class HangmanGui extends JFrame// implements ActionListener
 			usedLetters[i].setVisible(false);
 			usedLettersArea.add(usedLetters[i]);
 		}
+		usedLettersArea.add(Box.createRigidArea(new Dimension(0,50)));
 		
 		
 		
@@ -111,25 +130,7 @@ public class HangmanGui extends JFrame// implements ActionListener
       setLocationRelativeTo(null);
       setVisible(true);
       setResizable(false);
-      
-      JMenuBar menubar = new JMenuBar();
-		JMenu file = new JMenu("File");
-		JMenuItem newGame = new JMenuItem("New Game");
-		JMenuItem exitGame = new JMenuItem("Exit");
-		
-		exitGame.addActionListener(new ActionListener()
-		{
-            public void actionPerformed(ActionEvent event)
-            {
-            	System.exit(0);           	
-            }
-      });
-      
-      file.add(newGame);
-		file.add(exitGame);
-		menubar.add(file);
-		setJMenuBar(menubar);
-     
+
 	}
 	
 	public Letter[] getRemainingLetters()
@@ -149,5 +150,19 @@ public class HangmanGui extends JFrame// implements ActionListener
 	public JLabel getGameStatusLabel()
 	{
 		return gameStatusLabel;
+	}
+	
+	public JMenuItem getNewGame()
+	{
+		return newGame;
+	}
+	
+	public void reset()
+	{
+		for(int i = 0;i<26;i++)
+		{
+			remainingLetters[i].setVisible(true);
+			usedLetters[i].setVisible(false);
+		}
 	}
 }

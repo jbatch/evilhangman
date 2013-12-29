@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 
 public class Game implements ActionListener
 {
@@ -17,23 +18,40 @@ public class Game implements ActionListener
 	int guessesLeft;
 	JLabel builtWordLabel, gameStatusLabel;
 	boolean gameOver;
+	JMenuItem newGame;
 		
 	public Game()
 	{
-		guessesLeft = 10;
-		gameOver = false;
-		hGui = new HangmanGui();	
-		builtWord = "";
-		wordList = new ArrayList<String>();
-		
+		hGui = new HangmanGui();
 		remainingLettersArray = hGui.getRemainingLetters();
 		usedLettersArray = hGui.getUsedLetters();
 		builtWordLabel = hGui.getBuiltWord();
 		gameStatusLabel = hGui.getGameStatusLabel();
+		newGame = hGui.getNewGame();
+		newGame.addActionListener(new ActionListener()
+		{
+            public void actionPerformed(ActionEvent event)
+            {
+            	setupGame();
+            	hGui.reset();           	
+            }
+      });
 		for(int i = 0;i<26;i++)
 		{
 			remainingLettersArray[i].addActionListener(this);
 		}
+		setupGame();
+	}
+	
+	private void setupGame()
+	{
+		guessesLeft = 10;
+		gameOver = false;
+			
+		builtWord = "";
+		wordList = new ArrayList<String>();
+		
+		
 		gameStatusLabel.setText("Guesses left: " + guessesLeft);
 		startGame();
 	}
@@ -151,16 +169,19 @@ public class Game implements ActionListener
 	}
 	
 	public void actionPerformed(ActionEvent e) 
-	{          
-		((JButton)(e.getSource())).setVisible(false);
-		for(int i=0;i<26;i++)
-		{
-			if(usedLettersArray[i].getText().equals(((JButton)(e.getSource())).getText()))
+	{
+		if(!gameOver)
+		{     
+			((JButton)(e.getSource())).setVisible(false);
+			for(int i=0;i<26;i++)
 			{
-				usedLettersArray[i].setVisible(true);
-				guessLetter(usedLettersArray[i].getText().charAt(0));
-			}
-		}		
+				if(usedLettersArray[i].getText().equals(((JButton)(e.getSource())).getText()))
+				{
+					usedLettersArray[i].setVisible(true);
+					guessLetter(usedLettersArray[i].getText().charAt(0));
+				}
+			}	
+		}	
 	}
 	
 	private void guessLetter(char c)

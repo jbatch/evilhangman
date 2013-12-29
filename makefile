@@ -40,7 +40,6 @@ JC = javac
 
 CLASSES = \
 	Game.java \
-	ConsoleIO.java \
 	EvilHangman.java \
 	WordFamily.java \
 	HangmanGui.java \
