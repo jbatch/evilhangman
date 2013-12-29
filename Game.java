@@ -14,6 +14,7 @@ public class Game
 		
 	public Game()
 	{
+		new HangmanGui();	
 		System.out.println("Welcome to Hangman");
 		builtWord = "";
 		wordList = new ArrayList<String>();

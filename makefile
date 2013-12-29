@@ -42,7 +42,9 @@ CLASSES = \
 	Game.java \
 	ConsoleIO.java \
 	EvilHangman.java \
-	WordFamily.java
+	WordFamily.java \
+	HangmanGui.java \
+	Letter.java
 
 
 #
