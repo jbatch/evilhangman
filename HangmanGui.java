@@ -21,13 +21,13 @@ import javax.swing.JButton;
 
 
 
-public class HangmanGui extends JFrame implements ActionListener
+public class HangmanGui extends JFrame// implements ActionListener
 {
 
 	private JPanel gamePanel, hangmanArea, builtWordArea;
 	private JPanel remLettersArea, usedLettersArea, bottomPanel, remPanel, usedPanel;
 	private Letter[] remainingLetters, usedLetters;
-	private JLabel builtWord, lettersRemainingLabel, lettersUsedLabel;
+	private JLabel builtWord, lettersRemainingLabel, lettersUsedLabel, gameStatusLabel;
 
 
 	public HangmanGui()
@@ -50,8 +50,8 @@ public class HangmanGui extends JFrame implements ActionListener
 		remainingLetters = new Letter[26];
 		for(int i = 0;i<26;i++)
 		{
-			remainingLetters[i] = new Letter("" + (char)('a' + i));
-			remainingLetters[i].addActionListener(this);
+			remainingLetters[i] = new Letter("" + (char)('A' + i));
+			//remainingLetters[i].addActionListener(this);
 			remLettersArea.add(remainingLetters[i]);
 		}
 		remLettersArea.setPreferredSize(new Dimension(gameWidth, remainingLetters[0].getHeight()));
@@ -60,13 +60,15 @@ public class HangmanGui extends JFrame implements ActionListener
 		usedLetters = new Letter[26];
 		for(int i = 0;i<26;i++)
 		{
-			usedLetters[i] = new Letter("" + (char)('a' + i));
+			usedLetters[i] = new Letter("" + (char)('A' + i));
 			usedLetters[i].setVisible(false);
 			usedLettersArea.add(usedLetters[i]);
 		}
 		
 		builtWord = new JLabel("-----");
+		gameStatusLabel = new JLabel("ttt");
 		builtWordArea.add(builtWord);
+		builtWordArea.add(gameStatusLabel);
 		
 		lettersRemainingLabel = new JLabel("Letters Remaining:");
 		remPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
@@ -120,7 +122,7 @@ public class HangmanGui extends JFrame implements ActionListener
      
 	}
 	
-	public void actionPerformed(ActionEvent e) 
+	/*public void actionPerformed(ActionEvent e) 
 	{          
 		((JButton)(e.getSource())).setVisible(false);
 		for(int i=0;i<26;i++)
@@ -130,5 +132,24 @@ public class HangmanGui extends JFrame implements ActionListener
 				usedLetters[i].setVisible(true);
 			}
 		}
+	}*/
+	
+	public Letter[] getRemainingLetters()
+	{
+		return remainingLetters;
+	}
+	public Letter[] getUsedLetters()
+	{
+		return usedLetters;
+	}
+	
+	public JLabel getBuiltWord()
+	{
+		return builtWord;
+	}
+	
+	public JLabel getGameStatusLabel()
+	{
+		return gameStatusLabel;
 	}
 }
