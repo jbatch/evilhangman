@@ -2,12 +2,13 @@ import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-//Stuff for GUI
+///////Stuff for GUI///////////
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+///////////////////////////
 
 public class Game implements ActionListener
 {
@@ -32,7 +33,7 @@ public class Game implements ActionListener
 		{
             public void actionPerformed(ActionEvent event)
             {
-            	setupGame();
+            	newGame();
             	hGui.reset();           	
             }
       });
@@ -40,25 +41,22 @@ public class Game implements ActionListener
 		{
 			remainingLettersArray[i].addActionListener(this);
 		}
-		setupGame();
+		newGame();
 	}
 	
-	private void setupGame()
+	private void newGame()
 	{
 		guessesLeft = 10;
-		gameOver = false;
-			
+		gameOver = false;			
 		builtWord = "";
-		wordList = new ArrayList<String>();
-		
-		
+		wordList = new ArrayList<String>();				
 		gameStatusLabel.setText("Guesses left: " + guessesLeft);
 		startGame();
 	}
 	
 	private void startGame()
 	{
-		int wordLength = 5 + (int)(Math.random() * ((10 - 5) + 1));
+		int wordLength = 5 + (int)(Math.random() * ((24 - 5) + 1));
 
 		builtWord = fillString('-', wordLength);
 		pattern = fillString('.', wordLength);
@@ -66,13 +64,12 @@ public class Game implements ActionListener
 
 		if(loadWords(wordLength))
 		{
-			startGuessing();
+			//words loaded successfully
 		}
 		else
 		{
-			System.out.println("Invalid word length");
-		}
-		
+			newGame();
+		}	
 	}
 	
 	private boolean loadWords(int wordLength)
@@ -99,12 +96,7 @@ public class Game implements ActionListener
 		}	
 		return ret;
 	}
-	
-	private void startGuessing()
-	{	
-			
-	}
-	
+		
 	private String buildWordPattern(String s, char c, String patternSoFar)
 	{
 		int i = 0;
@@ -163,8 +155,7 @@ public class Game implements ActionListener
 			{
 				ret = true;
 			}
-		}
-		
+		}		
 		return ret;
 	}
 	
@@ -242,20 +233,17 @@ public class Game implements ActionListener
 			{
 				guessesLeft--;
 			}
-
-			System.out.println("Guesses left: " + guessesLeft);
+			
 			gameStatusLabel.setText("Guesses left: " + guessesLeft);
 			
 			if(guessesLeft == 0 && builtWord.contains("-")) //PlayerLost
 			{
 				int r = (int)(Math.random() * ((wordList.size() - 1) + 1));
-				System.out.println("You lost!\nThe word was: " + wordList.get(r));
 				gameStatusLabel.setText("You lost!\nThe word was: " + wordList.get(r));
 				gameOver = true;
 			}
 			else if(!builtWord.contains("-"))
 			{
-				System.out.println("You win");
 				gameStatusLabel.setText("You Win");
 				gameOver = true;
 			}

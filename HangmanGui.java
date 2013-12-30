@@ -23,7 +23,7 @@ import javax.swing.Box;
 
 
 
-public class HangmanGui extends JFrame// implements ActionListener
+public class HangmanGui extends JFrame
 {
 
 	private JPanel gamePanel, hangmanArea, builtWordArea;
@@ -64,7 +64,6 @@ public class HangmanGui extends JFrame// implements ActionListener
 		remPanel = new JPanel();	
 		usedPanel = new JPanel();
 		hangmanArea.setBackground(Color.black);
-		//builtWordArea.setBackground(Color.red);
 		
 		remLettersArea.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		remainingLetters = new Letter[26];
