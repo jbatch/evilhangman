@@ -19,9 +19,7 @@ import java.awt.Dimension;
 import javax.swing.JButton;
 
 import javax.swing.Box;
-
-
-
+import javax.swing.ImageIcon;
 
 public class HangmanGui extends JFrame
 {
@@ -29,13 +27,21 @@ public class HangmanGui extends JFrame
 	private JPanel gamePanel, hangmanArea, builtWordArea;
 	private JPanel remLettersArea, usedLettersArea, bottomPanel, remPanel, usedPanel;
 	private Letter[] remainingLetters, usedLetters;
-	private JLabel builtWord, lettersRemainingLabel, lettersUsedLabel, gameStatusLabel;
+	private JLabel builtWord, lettersRemainingLabel, lettersUsedLabel, gameStatusLabel, manLabel;
 	private JMenuItem newGame;
-
+	private ImageIcon[] imgs;
+	private int imgNo;
 
 	public HangmanGui()
 	{
-		int gameHeight = 500, gameWidth = 750;
+		imgs = new ImageIcon[11];
+		imgNo = 0;
+		for(int i = 0; i < 11; i++)
+		{
+			imgs[i] = new ImageIcon("res/hang" + i + ".png");
+		}
+	
+		int gameHeight = 750, gameWidth = 750;
 		
 		JMenuBar menubar = new JMenuBar();
 		JMenu file = new JMenu("File");
@@ -63,7 +69,10 @@ public class HangmanGui extends JFrame
 		bottomPanel = new JPanel();	
 		remPanel = new JPanel();	
 		usedPanel = new JPanel();
-		hangmanArea.setBackground(Color.black);
+		
+		manLabel = new JLabel(imgs[10]);
+		hangmanArea.setBackground(Color.white);
+		hangmanArea.add(manLabel);
 		
 		remLettersArea.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		remainingLetters = new Letter[26];
@@ -163,5 +172,18 @@ public class HangmanGui extends JFrame
 			remainingLetters[i].setVisible(true);
 			usedLetters[i].setVisible(false);
 		}
+	}
+	
+	public void resetImage()
+	{
+		manLabel.setIcon(imgs[0]);
+		imgNo = 0;
+	}
+	
+	public void nextImage()
+	{
+		imgNo++;
+		manLabel.setIcon(imgs[imgNo]);
+		System.out.println(imgNo);
 	}
 }

@@ -51,6 +51,7 @@ public class Game implements ActionListener
 		builtWord = "";
 		wordList = new ArrayList<String>();				
 		gameStatusLabel.setText("Guesses left: " + guessesLeft);
+		hGui.resetImage();
 		startGame();
 	}
 	
@@ -232,6 +233,7 @@ public class Game implements ActionListener
 			else
 			{
 				guessesLeft--;
+				hGui.nextImage();
 			}
 			
 			gameStatusLabel.setText("Guesses left: " + guessesLeft);
