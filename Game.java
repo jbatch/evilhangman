@@ -20,7 +20,7 @@ public class Game implements ActionListener
 	JLabel builtWordLabel, gameStatusLabel;
 	boolean gameOver;
 	JMenuItem newGame;
-		
+
 	public Game()
 	{
 		hGui = new HangmanGui();
@@ -57,7 +57,7 @@ public class Game implements ActionListener
 	
 	private void startGame()
 	{
-		int wordLength = 5 + (int)(Math.random() * ((24 - 5) + 1));
+		int wordLength = 5 + (int)(Math.random() * ((9 - 5) + 1));
 
 		builtWord = fillString('-', wordLength);
 		pattern = fillString('.', wordLength);
